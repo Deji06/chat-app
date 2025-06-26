@@ -1,17 +1,18 @@
 import type React from "react";
 import { useState } from "react";
-import chat from "../../public/chat.jpg";
+import chat from "../asset/chat.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+// import DashboardLayout from "../components/DashboardLayout";
 // import SignUp from "../components/SignUp";
 // import { signInWithEmailAndPassword } from "firebase/auth";
 // import { auth } from "../services/firebaseconfig.ts";
 
-interface loginProps {
+type loginProps = {
   // setRegisteredUser: React.Dispatch<React.SetStateAction<string | null>>;
   registeredUser: string | null;
 }
-const login = ({ registeredUser }: loginProps) => {
+const Login = ({ registeredUser }: loginProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,14 +40,16 @@ const login = ({ registeredUser }: loginProps) => {
       setLoading(true);
       setError(null);
       const body = { email, password };
-      const payload = JSON.stringify(body);
-      const response = await axios.post(`${url}/api/v1/login`, payload, config);
+      // const payload = JSON.stringify(body);
+      const response = await axios.post(`${url}/api/v1/login`, body, config);
       const data = response.data;
       // setRegisteredUser(data.user?.name)
-      console.log("login successfull", data);
+      console.log("login successfull");
       const { token } = data;
       localStorage.setItem("authToken", token);
-      navigate('/userList')
+      console.log('attempting to navigate to dashboard');  
+      navigate('/dashboard')
+      console.log('navigation successful');
     } catch (err: any) {
       console.log("Error:", err);
       const errorMessage = err.response.data?.msg;
@@ -76,7 +79,7 @@ const login = ({ registeredUser }: loginProps) => {
                 // required
               />
               <input
-                type="text"
+                type="password"
                 placeholder="Password"
                 className="border-2 w-[60%] m-auto rounded p-2"
                 value={password}
@@ -113,7 +116,7 @@ const login = ({ registeredUser }: loginProps) => {
   );
 };
 
-export default login;
+export default Login;
 
 // const handleForm = async (e: React.FormEvent) => {
 //   e.preventDefault();

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import ChatRoom from "../components/ChatRoom";
+import { useNavigate, useParams } from "react-router-dom";
+// import ChatRoom from "../components/ChatRoom";
 import { BsChatTextFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 // import { FaRocketchat } from "react-icons/fa";
@@ -15,11 +15,12 @@ interface Users {
 
 const UserList = () => {
   const navigate = useNavigate();
+  // const{otherUserId} = useParams<{otherUserId:string}>()
   const [userList, setUserList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userCount, setUserCount] = useState<number>(0);
-  const[userName, setUserName] = useState([])
+  // const[userName, setUserName] = useState([])
 
   useEffect(() => {
     const getUsers = async () => {
@@ -29,11 +30,19 @@ const UserList = () => {
         const token = localStorage.getItem("authToken");
 
         if (!token) {
+          console.log('no toekn found');
           navigate("/");
           return;
         }
 
         const url = import.meta.env.VITE_API_URL;
+            if (!url) {
+            console.error("[UserList ERROR] VITE_API_URL is not defined!");
+            setError("Backend API URL is not configured.");
+            setLoading(false);
+            return;
+        }
+
         const config = {
           headers: {
             "Content-type": "application/json",
@@ -44,12 +53,12 @@ const UserList = () => {
         const fetchUsers = await axios.get(`${url}/api/v1/users`, config);
         setUserList(fetchUsers.data.data || []);
         setUserCount(fetchUsers.data.count);
-        setUserName(fetchUsers.data)
+        // setUserName(fetchUsers.data)
         // console.log('users:' , ... userName);
         
 
-        console.log("backend List:", fetchUsers.data);
-        console.log("user List:", fetchUsers.data.data);
+        // console.log("backend List:", fetchUsers.data);
+        // console.log("user List:", fetchUsers.data.data);
       } catch (error: any) {
         console.error("error fetching users", error);
         const errorMessage = error.fetchUsers.data.msg;
@@ -60,24 +69,30 @@ const UserList = () => {
     };
 
     getUsers();
-  }, []);
+  }, [navigate]);
+
+    // Function to handle clicking on a user to start a chat
+  const handleUserClick = (UserId: string) => {
+    console.log(`[UserList] Navigating to chat with user ID: ${UserId}`);
+    navigate(`/dashboard/${UserId}`); // Navigate to the dashboard route with the user's ID
+  };
 
   return (
-    <div className="bg-[#1B1C1D] pb-1">
+    <div className="bg-[#1B1C1D] flex flex-col h-screen">
       {loading && (
-        <div className="flex justify-center items-center w-full mt-20">
+        <div className="flex justify-center items-center flex-1">
           <p className="text-white text-[20px]">Loading users....</p>
         </div>
       )}
 
       {error && <p className="text-red-500">Error: {error}</p>}
+      {!loading && !error && userList.length === 0 && (
+        <p className="text-gray-400 text-center mt-4">No other users found. Please register more users.</p>
+      )}
 
       {!loading && !error && userList.length > 0 && (
         <>
-          <div className="flex justify-between pt px-">
-            {/* left container */}
-            <div className="w-[30%] px-3 pt-5 h-screen overflow-y-auto scrollbar-hide">
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center flex-shrink-0 mb-6 px-3 py-5">
                 <p className="text-white capitalize text-[18px]">chats</p>
 
                 <div className="relative w-[20%]">
@@ -88,18 +103,19 @@ const UserList = () => {
                 </div>
               </div>
 
-              <ul className="space-y-5 mt-3">
+              <ul className="space-y-5 flex-1 overflow-y-auto scrollbar-hide">
                 {userList.map((user: Users) => {
-                  const { _id: id, username } = user;
+                  const { _id: id, username , email} = user;
                   return (
                     <li key={id}>
                       <button
                         className="w-full text-left p-2 rounded hover:bg-gray-600 transition-colors flex items-center gap-x-5"
-                        onClick={() => ""}
+                        onClick={() => handleUserClick(id)}
                       >
-                        <FaUser className="border rounded-full bg-[#303030] text-[#CCCDDE] border-gray-600 w-9 h-9 p-1.5" />
+                        <FaUser className="border rounded-full bg-blue-500 text-[#CCCDDE] border-gray-600 w-9 h-9 p-1.5" />
                         <div className="flex flex-col pt-">
                           <p className="text-white">{username}</p>
+                          {/* <p className="text-white">{email}</p> */}
                           <h1 className="text-[#CCCDDE]">hi</h1>
                         </div>
                       </button>
@@ -107,12 +123,6 @@ const UserList = () => {
                   );
                 })}
               </ul>
-            </div>
-            {/* right container */}
-            <div className="w-[100%]">
-              <ChatRoom />
-            </div>
-          </div>
         </>
       )}
     </div>

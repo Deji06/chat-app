@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import chat from "../../public/chat.jpg";
+import React, { useState } from "react";
+import chat from "../asset/chat.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import { auth } from "../services/firebaseconfig.ts";
@@ -45,7 +45,7 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
         config
       );
       const data = response.data;
-      console.log("sign up successful...", data);
+      // console.log("sign up successful...", data);
       setRegisteredUser(data?.user?.name);
       const{token} = data
       localStorage.setItem('regToken:', token)
@@ -94,7 +94,7 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
                 // required
               />
               <input
-                type="text"
+                type="password"
                 placeholder="Password"
                 className="border-2 w-[60%] m-auto rounded p-2"
                 value={password}
