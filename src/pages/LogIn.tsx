@@ -3,6 +3,7 @@ import { useState } from "react";
 import chat from "../asset/chat.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import whatsapp from "../asset/whatsapp.jpg";
 // import DashboardLayout from "../components/DashboardLayout";
 // import SignUp from "../components/SignUp";
 // import { signInWithEmailAndPassword } from "firebase/auth";
@@ -11,7 +12,7 @@ import axios from "axios";
 type loginProps = {
   // setRegisteredUser: React.Dispatch<React.SetStateAction<string | null>>;
   registeredUser: string | null;
-}
+};
 const Login = ({ registeredUser }: loginProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -47,9 +48,9 @@ const Login = ({ registeredUser }: loginProps) => {
       console.log("login successfull");
       const { token } = data;
       localStorage.setItem("authToken", token);
-      console.log('attempting to navigate to dashboard');  
-      navigate('/dashboard')
-      console.log('navigation successful');
+      console.log("attempting to navigate to dashboard");
+      navigate("/dashboard");
+      console.log("navigation successful");
     } catch (err: any) {
       console.log("Error:", err);
       const errorMessage = err.response.data?.msg;
@@ -62,10 +63,21 @@ const Login = ({ registeredUser }: loginProps) => {
   };
   return (
     <>
-      <div className="pb-5">
-        <div className="flex border w-[80%] m-auto mt-10 bg-[#F2EFED]">
-          <form className=" w-[60%] mt-10 gap-y-5" onSubmit={handleForm}>
-            <p className="text-[30px] text-bold capitalize text-center pt-5 ">
+      <div className="lg:mb-5">
+        <div
+          className="flex  h-screen w-screen lg:w-[80%] m-auto lg:mt-10 bg-[#F2EFED]"
+          style={{
+            backgroundImage: `url(${whatsapp})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          }}
+        >
+          <form
+            className=" lg:w-[60%] w-screen mt-10 gap-y-5 "
+            onSubmit={handleForm}
+          >
+            <p className="text-[30px] text-bold text-white capitalize text-center pt-5 ">
               {registeredUser ? `Login here ${registeredUser}!` : "Login here!"}
             </p>
 
@@ -73,7 +85,7 @@ const Login = ({ registeredUser }: loginProps) => {
               <input
                 type="text"
                 placeholder="Email"
-                className="border-2 w-[60%] m-auto rounded p-2"
+                className="border-2  w-[80%] lg:w-[60%]  m-auto rounded p-2 outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 // required
@@ -81,18 +93,18 @@ const Login = ({ registeredUser }: loginProps) => {
               <input
                 type="password"
                 placeholder="Password"
-                className="border-2 w-[60%] m-auto rounded p-2"
+                className="border-2  w-[80%] lg:w-[60%]  outline-none m-auto rounded p-2"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
             </div>
             {error && (
-              <p className="text-red-500 w-[50%] ml-[130px] text-center mt-3">
+              <p className="text-red-500 lg:w-[50%] m-auto lg:ml-[130px] text-center mt-3">
                 {error}
               </p>
             )}
-            <div className="flex   items-center pl-[60px] gap-x-20 w-[80%] mt-10 m-auto">
+            <div className="flex   items-center lg:pl-[60px] gap-x-10 lg:gap-x-20 w-[80%] mt-10 m-auto">
               <button
                 // onClick={handleLogin}
                 type="submit"
@@ -109,7 +121,11 @@ const Login = ({ registeredUser }: loginProps) => {
               </button>
             </div>
           </form>
-          <img src={chat} alt="text image" className="w-[40%] h-[530px]" />
+          <img
+            src={chat}
+            alt="text image"
+            className="w-[40%] h-screen hidden lg:block"
+          />
         </div>
       </div>
     </>

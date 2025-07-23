@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import chat from "../asset/chat.jpg";
+import whatsapp from "../asset/whatsapp.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // import { auth } from "../services/firebaseconfig.ts";
@@ -8,10 +9,10 @@ import axios from "axios";
 // import LogIn from "./LogIn.tsx";
 // type Props = {}
 interface signUpProps {
-  setRegisteredUser: React.Dispatch<React.SetStateAction<string | null>>
+  setRegisteredUser: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const SignUp = ({setRegisteredUser}:signUpProps) => {
+const SignUp = ({ setRegisteredUser }: signUpProps) => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,9 +24,9 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
 
   const handleForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(!check) {
-      setError('please agree to the terms and privacy')
-      setLoading(false)
+    if (!check) {
+      setError("please agree to the terms and privacy");
+      setLoading(false);
       return;
     }
     try {
@@ -47,14 +48,15 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
       const data = response.data;
       // console.log("sign up successful...", data);
       setRegisteredUser(data?.user?.name);
-      const{token} = data
-      localStorage.setItem('regToken:', token)
+      const { token } = data;
+      localStorage.setItem("regToken:", token);
       // console.log('registered user:', data?.user?.name);
       navigate("login");
     } catch (err: any) {
       console.log("Error:", err);
       const errorMessage =
-        err.response.data?.err?.message || "An unexpected error occurred!, try again";
+        err.response.data?.err?.message ||
+        "An unexpected error occurred!, try again";
       console.log("Specific error message:", errorMessage);
       setError(errorMessage);
     } finally {
@@ -69,10 +71,20 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
 
   return (
     <>
-      <div className="pb-5">
-        <div className="flex border w-[80%] m-auto mt-10 bg-[#F2EFED]">
-          <form className=" w-[60%] mt-10 gap-y-5" onSubmit={handleForm}>
-            <p className="text-[30px] text-bold capitalize text-center pt-5 ">
+      <div
+        className="lg:mb-5"
+      >
+        <div
+          className="flex h-screen w-screen lg:w-[80%] sm:m-auto lg:mt-10"
+          style={{
+            backgroundImage: `url(${whatsapp})`, backgroundSize:'cover', backgroundRepeat:'no-repeat', backgroundPosition:'center',
+          }}
+        >
+          <form
+            className="sm:w-[60%] space-y-10 w-screen m-auto mt-10 gap-y-5"
+            onSubmit={handleForm}
+          >
+            <p className="text-[30px] text-white text-bold capitalize text-center pt-5 ">
               create account
             </p>
 
@@ -80,7 +92,7 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
               <input
                 type="text"
                 placeholder="Name"
-                className="border-2 w-[60%] m-auto rounded p-2"
+                className="border-2 w-[80%] lg:w-[60%]   m-auto rounded p-2 outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 // required
@@ -88,7 +100,7 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
               <input
                 type="text"
                 placeholder="Email"
-                className="border-2 w-[60%] m-auto rounded p-2"
+                className="border-2 w-[80%] lg:w-[60%] m-auto rounded p-2 outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 // required
@@ -96,33 +108,35 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
               <input
                 type="password"
                 placeholder="Password"
-                className="border-2 w-[60%] m-auto rounded p-2"
+                className="border-2 w-[80%] lg:w-[60%]  m-auto rounded p-2 outline-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
             </div>
             {error && (
-              <p className="text-red-500 w-[50%] ml-[130px] text-center mt-3">
+              <p className="text-red-500 lg:w-[50%] lg:ml-[130px] m-auto text-center mt-3">
                 {error}
               </p>
             )}
-            <div className="flex items-center gap-x-3 mt-5 m-auto w-[50%]">
+            <div className="flex items-center gap-x-3 mt-10 w-fit m-auto lg:w-[50%]">
               <input
                 type="checkbox"
                 checked={check}
                 onChange={(e) => setCheck(e.target.checked)}
               />
-              <p>I agree to the terms and privacy policy</p>
+              <p className="text-white">
+                I agree to the terms and privacy policy
+              </p>
             </div>
-            <div className="flex   items-center pl-[60px] gap-x-20 w-[80%] mt-10 m-auto">
+            <div className="flex items-center lg:pl-[60px] gap-x-10 md:gap-x-20 w-[80%] mt-10 m-auto">
               <button
                 onClick={(e: React.FormEvent) => {
                   handleForm(e);
                 }}
                 // onClick={()=> {handleSubmit()}}
                 type="submit"
-                className="border bg-black py-3 px-10 rounded  text-white"
+                className="border bg-black py-3 px-10 rounded  text-white hover:bg-[#CCCDDE] hover:opacity-5"
               >
                 {loading ? <p>signingup....</p> : <p>SignUp</p>}
               </button>
@@ -135,7 +149,11 @@ const SignUp = ({setRegisteredUser}:signUpProps) => {
               </button>
             </div>
           </form>
-          <img src={chat} alt="text image" className="w-[40%] h-[530px]" />
+          <img
+            src={chat}
+            alt="text image"
+            className="w-[40%] h-screen hidden lg:block"
+          />
         </div>
       </div>
     </>
