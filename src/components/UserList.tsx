@@ -1,10 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import ChatRoom from "../components/ChatRoom";
 import { BsChatTextFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 import { io, Socket } from "socket.io-client";
+import { MdOutlinePersonSearch } from "react-icons/md";
+import { debounce } from "lodash";
+import { MdCancel } from "react-icons/md";
+// import { TiDelete } from "react-icons/ti";
+// import { MdLocationSearching } from "react-icons/md";
+// import ChatRoom from "../components/ChatRoom";
 // import { FaRocketchat } from "react-icons/fa";
 
 interface Users {
@@ -29,22 +34,27 @@ interface Message {
 const UserList = () => {
   const navigate = useNavigate();
   const [userList, setUserList] = useState<Users[]>([]);
+  const [userSearch, setUserSearch] = useState<string>("");
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userCount, setUserCount] = useState<number>(0);
   const socketRef = useRef<Socket | null>(null);
   const currentUserIdRef = useRef<string | null>(null);
-  // const[userName, setUserName] = useState([])
 
   useEffect(() => {
     const getUsers = async () => {
+      if (isSearching) {
+        console.log("user search is going on");
+        return;
+      }
       try {
         setLoading(true);
         setError(null);
         const token = localStorage.getItem("authToken");
 
         if (!token) {
-          console.log("no toekn found");
+          console.log("no token found");
           navigate("/");
           return;
         }
@@ -73,8 +83,9 @@ const UserList = () => {
           lastMessageContent: user.lastMessageContent || "", // Add message content
         }));
         console.log("fetchedusers:", usersWithTimestamps);
-
-        setUserList(usersWithTimestamps || []);
+        if(userSearch.trim() === '') {
+          setUserList(usersWithTimestamps);
+        }
         setUserCount(fetchUsers.data.count);
       } catch (error: any) {
         console.error("[UserList] Error fetching users:", {
@@ -94,7 +105,7 @@ const UserList = () => {
     };
 
     getUsers();
-  }, [navigate]);
+  }, [navigate, isSearching]);
 
   // Socket.IO setup for real-time updates
   useEffect(() => {
@@ -196,8 +207,9 @@ const UserList = () => {
 
   // Function to handle clicking on a user to start a chat
   const handleUserClick = (UserId: string) => {
+    setLoading(false);
     console.log(`[UserList] Navigating to chat with user ID: ${UserId}`);
-    navigate(`/dashboard/${UserId}`); // Navigate to the dashboard route with the user's ID
+    navigate(`/dashboard/${UserId}`); 
   };
 
   const sortedUsers = [...userList].sort(
@@ -206,36 +218,132 @@ const UserList = () => {
       (a.lastMessageTimeStamp?.getTime() || 0)
   );
 
+  // useeffect function to search for users
+  useEffect(() => {
+    const debounncedSearchUser = debounce(async () => {
+      if (!userSearch.trim()) {
+        setIsSearching(false);
+        setUserList([]);
+        setUserCount(0);
+        return;
+      }
+      try {
+        setIsSearching(true);
+        // setLoading(true)
+        setError(null);
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          console.log("No auth token found, redirecting to login");
+          navigate("/");
+          return;
+        }
+        const url = import.meta.env.VITE_API_URL;
+        if (!url) {
+          console.error("[searchUser] VITE_API_URL is not defined!");
+          setError("Backend API URL is not configured.");
+          return;
+        }
+
+        const searchResponse = await axios.get<{
+          success: boolean;
+          data: Users[];
+          count: number;
+        }>(`${url}/api/v1/users/search?q=${userSearch}`, {
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = searchResponse;
+        if (!searchResponse.data.success) {
+          throw new Error("failed to find user");
+        }
+        console.log("search result:", data);
+        const usersWithTimestamps = searchResponse.data.data.map(
+          (user: Users) => ({
+            ...user,
+            lastMessageTimeStamp: user.lastMessageTimeStamp
+              ? new Date(user.lastMessageTimeStamp)
+              : null,
+            lastMessageContent: user.lastMessageContent || "",
+            lastMessageReadBy: user.lastMessageReadBy || [],
+          })
+        );
+
+        console.log("[UserList] Search results:", usersWithTimestamps);
+        setUserList(usersWithTimestamps);
+        setUserCount(searchResponse.data.count);
+      } catch (error: any) {
+        setUserCount(0)
+        console.error("error fetching user or user does not exist");
+        setError(error.response?.data?.msg || "Failed to find user");
+      } finally {
+        setLoading(false);
+      }
+    }, 500);
+    debounncedSearchUser();
+    return () => debounncedSearchUser.cancel();
+  }, [userSearch, navigate]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
+  const handleClearSearch = () => {
+    setUserSearch("");
+    setIsSearching(false);
+    setError(null);
+    // setUserList([]);
+    setUserCount(0);
+  };
+
   return (
-    <div className="bg-[#1B1C1D] flex flex-col h-screen">
+    <div className="bg-[#1B1C1D] flex flex-col h-screen pb-2">
+      <div className=" px-4 py-3">
+        <div className="flex justify-between">
+          <p className="text-white capitalize text-[20px] font-bold">chats</p>
+          <div className="relative w-[20%] mr-0">
+            <BsChatTextFill className="text-[45px] pl-5" />
+            <p className="text-blue-800 text-[14px] absolute top-[-4px] left-[35px] border bg-white rounded-full flex items-center h-5 w-5">
+              {userCount}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col border px-5 w-[95%] mx-2 justify-between  bg-white rounded-[5px]">
+        <form onSubmit={handleSearch} className="flex items-center">
+          <MdOutlinePersonSearch className="text-[35px] pl-3" />
+          <input
+            type="text"
+            value={userSearch}
+            onChange={(e) => setUserSearch(e.target.value)}
+            className=" w-full py-1 placeholder:px-3 border-none outline-none rounded-[5px]"
+            placeholder="search or start a new conver..."
+          />
+          <MdCancel onClick={handleClearSearch} className="mr-4 text-[20px]" />
+        </form>
+        <div className="border-2 border-black w-full"></div>
+      </div>
       {loading && (
         <div className="flex justify-center items-center flex-1">
           <p className="text-white text-[20px]">Loading users....</p>
         </div>
       )}
 
-      {error && <p className="text-red-500">Error: {error}</p>}
+      {error && (
+        <div className="flex justify-center items-center mt-20">
+          <p className="text-red-500">{error}</p>
+        </div>
+      )}
       {!loading && !error && userList.length === 0 && (
-        <p className="text-gray-400 text-center mt-4">
+        <p className="text-red-800 text-center">
           No other users found. Please register more users.
         </p>
       )}
 
       {!loading && !error && userList.length > 0 && (
         <>
-          <div className="flex justify-between items-center flex-shrink-0 mb-6 px-3 py-5">
-            <p className="text-white capitalize text-[18px]">chats</p>
-
-            <div className="relative w-[20%]">
-              <BsChatTextFill className="text-[20px]" />
-              <p className="text-black text-[14px] absolute top-[-10px] left-5 border bg-white rounded-full flex items-center h-5 w-5">
-                {userCount}
-              </p>
-            </div>
-          </div>
-          {/* <input type="text" /> */}
-
-          <ul className="space-y-5 flex-1 overflow-y-auto scrollbar-hide">
+          <ul className="space-y-2 flex-1 overflow-y-auto scrollbar-hide px-2 mt-5">
             {sortedUsers.map((user: Users) => {
               const {
                 _id: id,
@@ -251,13 +359,13 @@ const UserList = () => {
                     className="w-full text-left p-2 rounded hover:bg-gray-600 transition-colors flex items-center gap-x-5"
                     onClick={() => handleUserClick(id)}
                   >
-                    <FaUser className="border rounded-full bg-blue-500 text-[#CCCDDE] border-gray-600 w-9 h-9 p-1.5" />
-                    <div className="flex flex-col pt- border-red-900 border-2 w-[100%] ">
+                    <FaUser className="border rounded-full bg-blue-800 text-[#8d8d89] border-gray-600 w-9 h-9 p-1.5" />
+                    <div className="flex flex-col space-y-1 pt- borde-red-900 borde-2 w-[100%] ">
                       <div className="flex justify-between">
                         <p className="text-white">{username}</p>
                         {lastMessageTimeStamp && (
-                          <div className="`">
-                            <p className="text-blue-500">
+                          <div className="mr-2">
+                            <p className="text-blue-800 text-[12px]">
                               {/* Last active:{" "} */}
                               {lastMessageTimeStamp.toLocaleTimeString(
                                 "en-US",
@@ -271,10 +379,10 @@ const UserList = () => {
                           </div>
                         )}
                       </div>
-                      <p className="text-white">
-                        {lastMessageContent || "no recent messages"}
+                      <p className="text-gray-400">
+                        {lastMessageContent || "start conversation..."}
                       </p>
-                      <div>
+                      <div className="border-red-900">
                         {currentUserIdRef.current === user._id
                           ? lastMessageReadBy?.includes(user._id)
                             ? " ✓✓"
@@ -294,3 +402,5 @@ const UserList = () => {
 };
 
 export default UserList;
+
+

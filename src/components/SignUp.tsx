@@ -136,7 +136,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 }}
                 // onClick={()=> {handleSubmit()}}
                 type="submit"
-                className="border bg-black py-3 px-10 rounded  text-white hover:bg-[#CCCDDE] hover:opacity-5"
+                className="border bg-black py-3 px-10 rounded  text-white"
               >
                 {loading ? <p>signingup....</p> : <p>SignUp</p>}
               </button>

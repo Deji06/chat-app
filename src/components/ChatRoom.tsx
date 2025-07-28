@@ -477,13 +477,20 @@ const ChatRoom = () => {
     if (otherUserId && currentUserIdRef.current) {
       fetchMessages();
     }
-    // fetchMessages();
+    fetchMessages();
   }, [otherUserId, navigate]);
 
   return (
     <>
+{/* 
+        {loading && (
+        <div className="flex justify-center items-center flex-1">
+          <p className="text-white text-[20px]">Loading chat....</p>
+        </div>
+      )} */}
+    
       <div
-        className="h-screen flex flex-col  relative"
+        className="h-screen flex flex-col  relative "
         style={{
           backgroundImage: `url(${whatsapp})`,
           backgroundSize: "cover",
@@ -497,7 +504,7 @@ const ChatRoom = () => {
             onClick={() => navigate("/dashboard")}
           />
           <div className="flex items-center gap-x-2">
-            <FaUser className="border rounded-full bg-blue-500 text-[#CCCDDE] border-gray-600 w-9 h-9 p-1.5" />
+            <FaUser className="border rounded-full bg-blue-800 text-[#8d8d89] border-gray-600 w-9 h-9 p-1.5" />
             <h1 className="text-white">
               {otherUser ? otherUser?.username || otherUser.name : "chat room"}
             </h1>
@@ -528,12 +535,12 @@ const ChatRoom = () => {
                 <div
                   className={`borde flex items-cente gap-x-2 w-fit px-5 py-1 rounded-xl ${
                     message.sender._id === currentUserIdRef.current
-                      ? "bg-blue-500 "
+                      ? "bg-blue-800 "
                       : "bg-[#1B1C1D]"
                   } `}
                 >
-                  <p className="text-white ">{message.content}</p>
-                  <p className="text mt-3 text-red-900">
+                  <p className="text-white text-[14px] ">{message.content}</p>
+                  <p className="text mt-3 text-gray-400 text-[12px]">
                     {new Date(message.createdAt).toLocaleTimeString("en-US", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -551,22 +558,22 @@ const ChatRoom = () => {
         <form
           action=""
           onSubmit={handleSendMessage}
-          className="absolute bottom-0 left-0 w-full p-4 flex space-x-2 z-10"
+          className="absolute bottom-0 left-0 w-full mb- flex space-x-2 z-10"
         >
           <div className="flex justify-between  w-full ">
             <input
               type="text"
-              placeholder="Type a message.."
+              placeholder="Type a message....."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              className="flex-1 py-2 px-4 rounded-full border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
+              className="flex-1 py-2 px-4 rounded-full md:rounded-none border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-800 bg-gray-700 text-white"
             />
 
             <button
               type="submit"
               className=" hover:bg-[#303030] text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
-              <IoMdSend className="text-[30px]" />
+              <IoMdSend className="text-[30px] text-blue-800" />
             </button>
           </div>
         </form>
