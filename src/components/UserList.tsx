@@ -83,7 +83,7 @@ const UserList = () => {
           lastMessageContent: user.lastMessageContent || "", // Add message content
         }));
         console.log("fetchedusers:", usersWithTimestamps);
-        if(userSearch.trim() === '') {
+        if (userSearch.trim() === "") {
           setUserList(usersWithTimestamps);
         }
         setUserCount(fetchUsers.data.count);
@@ -209,7 +209,7 @@ const UserList = () => {
   const handleUserClick = (UserId: string) => {
     setLoading(false);
     console.log(`[UserList] Navigating to chat with user ID: ${UserId}`);
-    navigate(`/dashboard/${UserId}`); 
+    navigate(`/dashboard/${UserId}`);
   };
 
   const sortedUsers = [...userList].sort(
@@ -274,7 +274,7 @@ const UserList = () => {
         setUserList(usersWithTimestamps);
         setUserCount(searchResponse.data.count);
       } catch (error: any) {
-        setUserCount(0)
+        setUserCount(0);
         console.error("error fetching user or user does not exist");
         setError(error.response?.data?.msg || "Failed to find user");
       } finally {
@@ -402,5 +402,3 @@ const UserList = () => {
 };
 
 export default UserList;
-
-

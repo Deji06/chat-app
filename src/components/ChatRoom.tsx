@@ -435,6 +435,7 @@ const ChatRoom = () => {
           readBy: msg.readBy || [],
         }));
         setMessages(fetchedMessages);
+        setLoading(false)
 
         // Mark visible messages as read
         fetchedMessages.forEach((msg: Message) => {
@@ -482,13 +483,6 @@ const ChatRoom = () => {
 
   return (
     <>
-{/* 
-        {loading && (
-        <div className="flex justify-center items-center flex-1">
-          <p className="text-white text-[20px]">Loading chat....</p>
-        </div>
-      )} */}
-    
       <div
         className="h-screen flex flex-col  relative "
         style={{
@@ -512,6 +506,11 @@ const ChatRoom = () => {
         </div>
 
         <div className="mt-1 flex-1 overflow-y-auto scrollbar-hide px-4 pb-20 space-y-1 ">
+          {error && <p className="text-red-500 text-center">{error}</p>}
+          {loading && (
+            <p className="text-white text-[20px] text-center">Loading chat....</p>
+          )}
+
           {messages.length === 0 ? (
             otherUser?.username ? (
               <h1 className="text-white flex flex-1 items-center justify-center  text-[20px] w-[90%] bg-gray-800 bg-opacity-40 py-3">
