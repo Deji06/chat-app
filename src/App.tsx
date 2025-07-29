@@ -15,37 +15,41 @@ function App() {
   const [registeredUser, setRegisteredUser] = useState<string | null>(null);
   return (
     <>
-        <Routes>
-          <Route
-            path="/"
-            element={<SignUp setRegisteredUser={setRegisteredUser} />}
-          />
-          <Route
-            path="/login"
-            element={<LogIn registeredUser={registeredUser} />}
-          />
-          {/* <Route path="/userList" element={<UserList />} />  */}
-          {/* <Route  path="/chatRoom" element={<ChatRoom  />}  /> */}
-          <Route
-            path="/dashboard/:otherUserId?"
-            element={
-              isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
-            }
-          /> 
-           <Route
-            path="/chatRoom/:otherUserId"
-            element={<Navigate to="/dashboard/:otherUserId" replace />}
-          /> 
-          <Route
-            path="/chatRoom"
-            element={<Navigate to="/dashboard" replace />}
-          />
-          <Route path="*" element={<Navigate to="/Login" />} /> 
-        </Routes>
-    
+      <Routes>
+        <Route
+          path="/"
+          element={<SignUp setRegisteredUser={setRegisteredUser} />}
+        />
+        <Route
+          path="/login"
+          element={<LogIn registeredUser={registeredUser} />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+          }
+        />
+
+        <Route
+          path="/dashboard/:otherUserId?"
+          element={
+            isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/chatRoom/:otherUserId"
+          element={<Navigate to="/dashboard/:otherUserId" replace />}
+        />
+        <Route
+          path="/chatRoom"
+          element={<Navigate to="/dashboard" replace />}
+        />
+        <Route path="*" element={<Navigate to="/Login" />} />
+      </Routes>
     </>
   );
 }
 
 export default App;
-   
