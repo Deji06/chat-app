@@ -20,9 +20,37 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
   const [loading, setLoading] = useState(false);
   const [check, setCheck] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // const [registeredUser, setRegisteredUser] = useState("");
+  const[clientError, setClientError] = useState({name: '', password:"", email: ""})
+
+  const formValidation = () => {
+    let isValid = true
+    const errors = {email: "", password:"", name: ""}
+
+    if(name.length < 3) {
+      errors.name = 'name must be more than 3 characters'
+      isValid = false
+    }
+    if(!email.includes("@") || !email.includes('.')) {
+      errors.email = 'provide valid email'
+      isValid = false
+
+    }
+     if(password.length < 3) {
+      errors.password = 'name must be more than 3 characters'
+      isValid = false
+
+    }
+    setClientError(errors)
+
+    if(!isValid) {
+      setError(errors.name || errors.email || errors.password)
+    }
+
+    return isValid
+  }
 
   const handleForm = async (e: React.FormEvent) => {
+    if(!formValidation ()) return;
     e.preventDefault();
     if (!check) {
       setError("please agree to the terms and privacy");
@@ -50,7 +78,6 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
       setRegisteredUser(data?.user?.name);
       const { token } = data;
       localStorage.setItem("regToken:", token);
-      // console.log('registered user:', data?.user?.name);
       navigate("login");
     } catch (err: any) {
       console.log("Error:", err);
@@ -75,16 +102,16 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
         className="lg:mb-5"
       >
         <div
-          className="flex h-screen w-screen lg:w-[80%] sm:m-auto lg:mt-10"
+          className="flex h-screen lg:w-[80%] sm:m-auto lg:mt-10"
           style={{
             backgroundImage: `url(${whatsapp})`, backgroundSize:'cover', backgroundRepeat:'no-repeat', backgroundPosition:'center',
           }}
         >
           <form
-            className="sm:w-[60%] space-y-10 w-screen m-auto mt-10 gap-y-5"
+            className="space-y-10 w-[100%] m-auto mt-10 gap-y-5 borde"
             onSubmit={handleForm}
           >
-            <p className="text-[30px] text-white text-bold capitalize text-center pt-5 ">
+            <p className="text-[30px] text-white text-bold capitalize text-center pt-5 w-fit m-auto ">
               create account
             </p>
 
@@ -97,6 +124,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setName(e.target.value)}
                 // required
               />
+              {clientError.name && <p className="text-red-500 text-center">{clientError.name}</p>}
               <input
                 type="text"
                 placeholder="Email"
@@ -105,6 +133,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 // required
               />
+              {clientError.email && <p className="text-red-500 text-center">{clientError.email}</p>}
               <input
                 type="password"
                 placeholder="Password"
@@ -113,13 +142,15 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
+              {clientError.password && <p className="text-red-500 text-center">{clientError.password}</p>}
+
             </div>
             {error && (
               <p className="text-red-500 lg:w-[50%] lg:ml-[130px] m-auto text-center mt-3">
                 {error}
               </p>
             )}
-            <div className="flex items-center gap-x-3 mt-10 w-fit m-auto lg:w-[50%]">
+            <div className="flex items-center gap-x-3 mt-10 w-fit ml-12  md:m-auto lg:w-[50%]">
               <input
                 type="checkbox"
                 checked={check}
@@ -129,16 +160,13 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 I agree to the terms and privacy policy
               </p>
             </div>
-            <div className="flex items-center lg:pl-[60px] gap-x-10 md:gap-x-20 w-[80%] mt-10 m-auto">
+            <div className="flex justify-between items-center gap-x-10 w-[80%] md:w-[60%] mt-10 m-auto">
               <button
-                onClick={(e: React.FormEvent) => {
-                  handleForm(e);
-                }}
-                // onClick={()=> {handleSubmit()}}
+                onClick={handleForm}
                 type="submit"
                 className="border bg-black py-3 px-10 rounded  text-white"
               >
-                {loading ? <p>signingup....</p> : <p>SignUp</p>}
+                {loading ? <p className="whitespace-nowrap">signingup....</p> : <p>SignUp</p>}
               </button>
               <button
                 onClick={handleLogin}

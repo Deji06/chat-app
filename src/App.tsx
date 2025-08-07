@@ -1,20 +1,16 @@
-import { useState } from "react";
+import { useState, lazy , Suspense } from "react";
 import SignUp from "./components/SignUp";
 import { Route, Routes, Navigate } from "react-router-dom";
 import LogIn from "./pages/LogIn.tsx";
-import DashboardLayout from "./components/DashboardLayout.tsx";
-// import router from 'react-router-dom'
-// import UserList from "./components/UserList.tsx";
-// import ChatRoom from './components/ChatRoom.tsx'
-// import ChatRoom from "./pages/ChatRoom.tsx";
-// import { Routes, Route } from 'react-router-dom'
+
+const DashboardLayout = lazy(() => import ("./components/DashboardLayout.tsx"))
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("authToken");
-
   const [registeredUser, setRegisteredUser] = useState<string | null>(null);
+
   return (
-    <>
+    <Suspense fallback={<div>loading dashboard...</div>}>
       <Routes>
         <Route
           path="/"
@@ -48,7 +44,7 @@ function App() {
         />
         <Route path="*" element={<Navigate to="/Login" />} />
       </Routes>
-    </>
+    </Suspense>
   );
 }
 

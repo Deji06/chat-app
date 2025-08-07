@@ -4,6 +4,7 @@ import chat from "../asset/chat.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import whatsapp from "../asset/whatsapp.jpg";
+import { includes } from "lodash";
 // import DashboardLayout from "../components/DashboardLayout";
 // import SignUp from "../components/SignUp";
 // import { signInWithEmailAndPassword } from "firebase/auth";
@@ -19,32 +20,49 @@ const Login = ({ registeredUser }: loginProps) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [Usererror, setUserError] = useState({email:"", password:''});
+
+  const validateForm = () => {
+    let isValid = true
+     const errors = {email:"", password: ""}
+
+     if(!email.includes("@") || !email.includes('.')){
+      errors.email = 'provide valid email address'
+      isValid = false
+     }
+
+     if(password.length < 6) {
+      errors.password = 'password must be more than 6 characters'
+      isValid = false
+     }
+     setUserError(errors)
+     if(!isValid) {
+      setError(errors.email || errors.password)
+     }
+    
+     return isValid
+  }
 
   const handleSignUp = () => {
     navigate("/");
   };
 
   const handleForm = async (e: React.FormEvent) => {
+    if (!validateForm()) return;
     e.preventDefault();
-    // const regToken = localStorage.getItem("regToken");
-    // if(!regToken) {
-    //   navigate('/')
-    // }
+  
     const url = import.meta.env.VITE_API_URL;
     const config = {
       headers: {
         "content-type": "application/json",
-        // Authorization: `Bearer ${regToken}`,
       },
     };
     try {
       setLoading(true);
       setError(null);
       const body = { email, password };
-      // const payload = JSON.stringify(body);
       const response = await axios.post(`${url}/api/v1/login`, body, config);
       const data = response.data;
-      // setRegisteredUser(data.user?.name)
       console.log("login successfull");
       const { token } = data;
       localStorage.setItem("authToken", token);
@@ -90,6 +108,7 @@ const Login = ({ registeredUser }: loginProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 // required
               />
+               {Usererror.email && <p className="text-red-500 text-center">{Usererror.email}</p>}
               <input
                 type="password"
                 placeholder="Password"
@@ -98,19 +117,20 @@ const Login = ({ registeredUser }: loginProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
+               {Usererror.password && <p className="text-red-500 text-center">{Usererror.password}</p>}
             </div>
             {error && (
               <p className="text-red-500 lg:w-[50%] m-auto lg:ml-[130px] text-center mt-3">
                 {error}
               </p>
             )}
-            <div className="flex   items-center lg:pl-[60px] gap-x-10 lg:gap-x-20 w-[80%] mt-10 m-auto">
+            <div className="flex justify-between items-center gap-x-10 w-[80%] md:w-[60%] mt-10 m-auto ">
               <button
-                // onClick={handleLogin}
+                onClick={handleForm}
                 type="submit"
-                className="border bg-black px-12 py-3 rounded text-white"
+                className="border bg-black px-10 py-3 rounded text-white"
               >
-                {loading ? <p>logging in....</p> : <p>Login</p>}
+                {loading ? <p className="whitespace-nowrap">logging in...</p> : <p className="">LogIn</p>}
               </button>
               <button
                 onClick={handleSignUp}

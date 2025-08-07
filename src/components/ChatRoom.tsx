@@ -6,6 +6,8 @@ import { IoMdSend } from "react-icons/io";
 import whatsapp from "../asset/whatsapp.jpg";
 import { FaUser } from "react-icons/fa";
 import { IoArrowUndoSharp } from "react-icons/io5";
+import { IoIosCheckmark } from "react-icons/io";
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 
 interface User {
   _id: string;
@@ -534,11 +536,16 @@ const ChatRoom = () => {
                 <div
                   className={`borde flex items-cente gap-x-2 w-fit px-5 py-1 rounded-xl ${
                     message.sender._id === currentUserIdRef.current
-                      ? "bg-blue-800 "
+                      ? "bg-blue-800  "
                       : "bg-[#1B1C1D]"
                   } `}
                 >
-                  <p className="text-white text-[14px] ">{message.content}</p>
+                  <p className="text-white text-[14px] ">{message.content}</p>   
+
+                  {/* {message.sender._id === currentUserIdRef.current && message.readBy && (
+                     <IoCheckmarkDoneSharp className="text-green-500 text-lg" />
+                    )} */}
+          
                   <p className="text mt-3 text-gray-400 text-[12px]">
                     {new Date(message.createdAt).toLocaleTimeString("en-US", {
                       hour: "2-digit",
