@@ -45,8 +45,8 @@ const Login = ({ registeredUser }: loginProps) => {
   };
 
   const handleForm = async (e: React.FormEvent) => {
-    if (!validateForm()) return;
     e.preventDefault();
+    if (!validateForm()) return;
   
     const url = import.meta.env.VITE_API_URL;
     const config = {
@@ -105,7 +105,7 @@ const Login = ({ registeredUser }: loginProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 // required
               />
-               {Usererror.email && <p className="text-red-500 text-center">{Usererror.email}</p>}
+               {Usererror.email && <p className="text-red-500 ml-10">{Usererror.email}</p>}
               <input
                 type="password"
                 placeholder="Password"
@@ -114,7 +114,7 @@ const Login = ({ registeredUser }: loginProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
-               {Usererror.password && <p className="text-red-500 text-center">{Usererror.password}</p>}
+               {Usererror.password && <p className="text-red-500 ml-10">{Usererror.password}</p>}
             </div>
             {error && (
               <p className="text-red-500 lg:w-[50%] m-auto lg:ml-[130px] text-center mt-3">

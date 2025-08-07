@@ -46,8 +46,8 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
   }
 
   const handleForm = async (e: React.FormEvent) => {
-    if(!formValidation ()) return;
     e.preventDefault();
+    if(!formValidation ()) return;
     if (!check) {
       setError("please agree to the terms and privacy");
       setLoading(false);
@@ -120,7 +120,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setName(e.target.value)}
                 // required
               />
-              {clientError.name && <p className="text-red-500 text-center">{clientError.name}</p>}
+              {clientError.name && <p className="text-red-500 ml-10 ">{clientError.name}</p>}
               <input
                 type="text"
                 placeholder="Email"
@@ -129,7 +129,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 // required
               />
-              {clientError.email && <p className="text-red-500 text-center">{clientError.email}</p>}
+              {clientError.email && <p className="text-red-500 ml-10 ">{clientError.email}</p>}
               <input
                 type="password"
                 placeholder="Password"
@@ -138,7 +138,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
-              {clientError.password && <p className="text-red-500 text-center">{clientError.password}</p>}
+              {clientError.password && <p className="text-red-500 ml-10 ">{clientError.password}</p>}
 
             </div>
             {error && (
@@ -146,21 +146,21 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 {error}
               </p>
             )}
-            <div className="flex items-center gap-x-3 mt-10 w-fit ml-12  md:m-auto lg:w-[50%]">
+            <div className="flex items-center gap-x-3 mt-10 w-fit ml-12 md:m-auto lg:w-[50%]">
               <input
                 type="checkbox"
                 checked={check}
                 onChange={(e) => setCheck(e.target.checked)}
               />
-              <p className="text-white">
+              <p className="text-white text-[14px]">
                 I agree to the terms and privacy policy
               </p>
             </div>
-            <div className="flex justify-between items-center gap-x-10 w-[80%] md:w-[60%] mt-10 m-auto">
+            <div className="flex justify-between items-center gap-x-8 w-[80%] md:w-[60%] mt-10 ml-8">
               <button
                 onClick={handleForm}
                 type="submit"
-                className="border bg-black py-3 px-10 rounded  text-white"
+                className="border bg-black py-3 px-10 rounded text-white"
               >
                 {loading ? <p className="whitespace-nowrap">signingup....</p> : <p>SignUp</p>}
               </button>
