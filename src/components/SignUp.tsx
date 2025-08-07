@@ -3,11 +3,7 @@ import chat from "../asset/chat.jpg";
 import whatsapp from "../asset/whatsapp.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { auth } from "../services/firebaseconfig.ts";
-// import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-// import LogIn from "../pages/LogIn.tsx";
-// import LogIn from "./LogIn.tsx";
-// type Props = {}
+
 interface signUpProps {
   setRegisteredUser: React.Dispatch<React.SetStateAction<string | null>>;
 }

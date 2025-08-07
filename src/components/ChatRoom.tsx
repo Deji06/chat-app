@@ -6,8 +6,8 @@ import { IoMdSend } from "react-icons/io";
 import whatsapp from "../asset/whatsapp.jpg";
 import { FaUser } from "react-icons/fa";
 import { IoArrowUndoSharp } from "react-icons/io5";
-import { IoIosCheckmark } from "react-icons/io";
-import { IoCheckmarkDoneSharp } from "react-icons/io5";
+// import { IoIosCheckmark } from "react-icons/io";
+// import { IoCheckmarkDoneSharp } from "react-icons/io5";
 
 interface User {
   _id: string;
@@ -171,78 +171,6 @@ const ChatRoom = () => {
     }
   }, [otherUserId, navigate]);
 
-  // Effect 3: Fetch initial chat history when component mounts or otherUserId changes
-  // useEffect(() => {
-  //   const fetchChatHistory = async () => {
-  //     const token = localStorage.getItem("authToken");
-  //     const currentUserId = currentUserIdRef.current;
-
-  //     if (!token || !otherUserId || !currentUserId) {
-  //       console.log(
-  //         "Cannot fetch chat history: Missing token, otherUserId, or currentUserId."
-  //       );
-  //       if (!currentUserId) {
-  //         console.log(
-  //           "[EFFECT 3 REDUNDANT NAV] currentUserId missing, navigating to /login (Effect 3)."
-  //         );
-  //         navigate("/login");
-  //       }
-
-  //       return;
-  //     }
-  //     console.log(
-  //       `[EFFECT 3 API CALL] Token present, IDs present. Making GET /api/v1/messages/${otherUserId}`
-  //     );
-
-  //     setLoading(true);
-  //     setError(null);
-  //     try {
-  //       const url = import.meta.env.VITE_API_URL;
-  //       if (!url) {
-  //         console.error(
-  //           "VITE_API_URL is not defined in environment variables!"
-  //         );
-  //         setError("Backend API URL is not configured correctly.");
-  //         setLoading(false);
-  //         return;
-  //       }
-
-  //       const config = {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       };
-
-  //       const response = await axios.get<
-  //         any,
-  //         { data: { messages: Message[] } }
-  //       >(`${url}/api/v1/messages?otherUserId=${otherUserId}`, config);
-  //       setMessages(response.data.messages);
-  //     } catch (err: any) {
-  //       console.error("Error fetching chat history:", err);
-  //       if (axios.isAxiosError(err) && err.response) {
-  //         setError(err.response.data?.message || "Failed to fetch messages.");
-  //       } else {
-  //         setError("Network error or unexpected issue.");
-  //       }
-  //       if (err.response?.status === 401) {
-  //         navigate("/login");
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   // Only call the fetch function if otherUserId is present and currentUserId is loaded
-  //   if (otherUserId && currentUserIdRef.current) {
-  //     fetchChatHistory();
-  //   } else {
-  //     console.log(
-  //       "[EFFECT 3 END] Conditions not met for fetchChatHistory. Skipping."
-  //     );
-  //   }
-  // }, [otherUserId, navigate]); // Dependencies: otherUserId and navigate
 
   useEffect(() => {
     otherUserIdRef.current = otherUserId; // Update ref when otherUserId changes

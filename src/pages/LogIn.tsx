@@ -4,11 +4,8 @@ import chat from "../asset/chat.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import whatsapp from "../asset/whatsapp.jpg";
-import { includes } from "lodash";
-// import DashboardLayout from "../components/DashboardLayout";
-// import SignUp from "../components/SignUp";
-// import { signInWithEmailAndPassword } from "firebase/auth";
-// import { auth } from "../services/firebaseconfig.ts";
+// import { includes } from "lodash";
+
 
 type loginProps = {
   // setRegisteredUser: React.Dispatch<React.SetStateAction<string | null>>;
