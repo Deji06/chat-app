@@ -128,7 +128,7 @@ const Login = ({ registeredUser }: loginProps) => {
                 type="submit"
                 className="border bg-black px-10 py-3 rounded text-white"
               >
-                {loading ? <ClipLoader size={18} color={"#ffffff"} /> : <p className="">Log In</p>}
+                {loading ? <ClipLoader size={18} color={"#ffffff"} /> : <p className="whitespace-nowrap">Login</p>}
               </button>
               <button
                 onClick={handleSignUp}
