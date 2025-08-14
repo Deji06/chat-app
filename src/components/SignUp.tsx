@@ -3,6 +3,7 @@ import chat from "../asset/chat.jpg";
 import whatsapp from "../asset/whatsapp.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface signUpProps {
   setRegisteredUser: React.Dispatch<React.SetStateAction<string | null>>;
@@ -104,7 +105,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
           }}
         >
           <form
-            className="space-y-10 w-[100%] m-auto mt-10 gap-y-5 borde"
+            className="space-y-10 md:space-y-6 w-[100%] m-auto mt-10 md:mt-0 gap-y-5"
             onSubmit={handleForm}
           >
             <p className="text-[30px] text-white text-bold capitalize text-center pt-5 w-fit m-auto ">
@@ -120,7 +121,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setName(e.target.value)}
                 // required
               />
-              {clientError.name && <p className="text-red-500 ml-10 ">{clientError.name}</p>}
+              {clientError.name && <p className="text-red-500 ml-10 md:ml-32 text-[14px] ">{clientError.name}</p>}
               <input
                 type="text"
                 placeholder="Email"
@@ -129,7 +130,7 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 // required
               />
-              {clientError.email && <p className="text-red-500 ml-10 ">{clientError.email}</p>}
+              {clientError.email && <p className="text-red-500 ml-10 md:ml-32 text-[14px]  ">{clientError.email}</p>}
               <input
                 type="password"
                 placeholder="Password"
@@ -138,15 +139,15 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
-              {clientError.password && <p className="text-red-500 ml-10 ">{clientError.password}</p>}
+              {clientError.password && <p className="text-red-500 ml-10 md:ml-32 text-[14px]  ">{clientError.password}</p>}
 
             </div>
             {error && (
-              <p className="text-red-500 lg:w-[50%] lg:ml-[130px] m-auto text-center mt-3">
+              <p className="text-red-500 lg:w-[50%] lg:ml-[130px] m-auto text-center mt-3 md:mt-0 text-[14px] ">
                 {error}
               </p>
             )}
-            <div className="flex items-center gap-x-3 mt-10 w-fit ml-12 md:m-auto lg:w-[50%]">
+            <div className="flex items-center gap-x-3 mt-10 w-fit ml-12 md:ml-32 lg:w-[50%]">
               <input
                 type="checkbox"
                 checked={check}
@@ -156,13 +157,13 @@ const SignUp = ({ setRegisteredUser }: signUpProps) => {
                 I agree to the terms and privacy policy
               </p>
             </div>
-            <div className="flex justify-between items-center gap-x-8 w-[80%] md:w-[60%] mt-10 ml-8">
+            <div className="flex justify-between items-center gap-x-8 w-[80%] md:w-[60%] mt-10 ml-8 md:m-auto">
               <button
                 onClick={handleForm}
                 type="submit"
                 className="border bg-black py-3 px-10 rounded text-white"
               >
-                {loading ? <p className="whitespace-nowrap">signingup....</p> : <p>SignUp</p>}
+                {loading ? <ClipLoader size={18} color={"#ffffff"} /> : <p>SignUp</p>}
               </button>
               <button
                 onClick={handleLogin}

@@ -4,6 +4,7 @@ import chat from "../asset/chat.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import whatsapp from "../asset/whatsapp.jpg";
+import ClipLoader from 'react-spinners/ClipLoader'
 // import { includes } from "lodash";
 
 
@@ -105,7 +106,7 @@ const Login = ({ registeredUser }: loginProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 // required
               />
-               {Usererror.email && <p className="text-red-500 ml-10">{Usererror.email}</p>}
+               {Usererror.email && <p className="text-red-500 ml-10 md:ml-32 text-[14px] ">{Usererror.email}</p>}
               <input
                 type="password"
                 placeholder="Password"
@@ -114,10 +115,10 @@ const Login = ({ registeredUser }: loginProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 // required
               />
-               {Usererror.password && <p className="text-red-500 ml-10">{Usererror.password}</p>}
+               {Usererror.password && <p className="text-red-500 ml-10 md:ml-32 text-[14px] " >{Usererror.password}</p>}
             </div>
             {error && (
-              <p className="text-red-500 lg:w-[50%] m-auto lg:ml-[130px] text-center mt-3">
+              <p className="text-red-500 lg:w-[50%] m-auto lg:ml-[130px] text-center mt-3 text-[14px] ">
                 {error}
               </p>
             )}
@@ -127,7 +128,7 @@ const Login = ({ registeredUser }: loginProps) => {
                 type="submit"
                 className="border bg-black px-10 py-3 rounded text-white"
               >
-                {loading ? <p className="whitespace-nowrap">logging in...</p> : <p className="">LogIn</p>}
+                {loading ? <ClipLoader size={18} color={"#ffffff"} /> : <p className="">Log In</p>}
               </button>
               <button
                 onClick={handleSignUp}
